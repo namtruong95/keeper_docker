@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  # Postgres container
+  postgres:
+    build: ./postgres
+    volumes:
+      - ${DATA_SAVE_PATH}/postgres:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
+
+  # Redis container
+  redis:
+      build: ./redis
+      volumes:
+        - ${DATA_SAVE_PATH}/redis:/data
+      ports:
+        - "${REDIS_PORT}:6379"
+      networks:
+        - backend
+
+networks:
+  backend:
+    driver: "bridge"
+
+volumes:
+  postgres:
+    driver: "local"
+  redis:
+    driver: "local"
